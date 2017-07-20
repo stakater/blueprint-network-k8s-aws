@@ -97,8 +97,6 @@ module "nat" {
   name              = "${var.name}-nat"
   azs               = "${var.azs}"
   public_subnet_ids = "${module.public_subnet.subnet_ids}"
-
-  kubernetes_cluster = "${var.kubernetes_cluster}"
 }
 
 module "private_app_subnet" {
