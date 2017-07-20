@@ -21,6 +21,7 @@ resource "aws_network_acl" "acl" {
   }
 
   tags {
-    Name = "${var.name}"
+    Name              = "${var.name}"
+    KubernetesCluster = "${var.kubernetes_cluster}"
   }
 }

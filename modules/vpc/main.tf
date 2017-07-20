@@ -2,7 +2,8 @@ resource "aws_vpc" "vpc" {
   cidr_block = "${var.vpc_cidr}"
 
   tags {
-    Name = "${var.name}"
+    Name              = "${var.name}"
+    KubernetesCluster = "${var.kubernetes_cluster}"
   }
 
   enable_dns_support   = true

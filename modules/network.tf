@@ -3,6 +3,9 @@
 ######################
 variable "name" {}
 
+// cluster ID for the "KubernetesCluster" tag
+variable "kubernetes_cluster" {}
+
 variable "vpc_cidr" {}
 variable "aws_region" {}
 
@@ -73,6 +76,8 @@ module "vpc" {
 
   name     = "${var.name}-vpc"
   vpc_cidr = "${var.vpc_cidr}"
+
+  kubernetes_cluster = "${var.kubernetes_cluster}"
 }
 
 module "public_subnet" {
@@ -82,6 +87,8 @@ module "public_subnet" {
   vpc_id         = "${module.vpc.vpc_id}"
   public_subnets = "${var.public_subnets}"
   azs            = "${var.azs}"
+
+  kubernetes_cluster = "${var.kubernetes_cluster}"
 }
 
 module "nat" {
@@ -90,6 +97,8 @@ module "nat" {
   name              = "${var.name}-nat"
   azs               = "${var.azs}"
   public_subnet_ids = "${module.public_subnet.subnet_ids}"
+
+  kubernetes_cluster = "${var.kubernetes_cluster}"
 }
 
 module "private_app_subnet" {
@@ -101,6 +110,8 @@ module "private_app_subnet" {
   azs                 = "${var.azs}"
 
   nat_gateway_ids = "${module.nat.nat_gateway_ids}"
+
+  kubernetes_cluster = "${var.kubernetes_cluster}"
 }
 
 module "private_persistence_subnet" {
@@ -110,6 +121,8 @@ module "private_persistence_subnet" {
   vpc_id                      = "${module.vpc.vpc_id}"
   private_persistence_subnets = "${var.private_persistence_subnets}"
   azs                         = "${var.azs}"
+
+  kubernetes_cluster = "${var.kubernetes_cluster}"
 }
 
 module "network_acl" {
@@ -119,6 +132,8 @@ module "network_acl" {
   vpc_id                 = "${module.vpc.vpc_id}"
   public_subnet_ids      = "${module.public_subnet.subnet_ids}"
   private_app_subnet_ids = "${module.private_app_subnet.subnet_ids}"
+
+  kubernetes_cluster = "${var.kubernetes_cluster}"
 }
 
 ##### VPC-PEERING

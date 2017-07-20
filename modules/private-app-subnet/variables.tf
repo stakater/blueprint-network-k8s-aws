@@ -14,3 +14,5 @@ variable "azs" {
   description = "A list of Availability zones in the region"
   default     = []
 }
+
+variable "kubernetes_cluster" {}

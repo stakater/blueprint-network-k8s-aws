@@ -1,8 +1,14 @@
 resource "aws_route_table" "persistence" {
   vpc_id = "${var.vpc_id}"
 
+  # Ignore routing table changes because we will add Kubernetes PodCIDR routing outside of Terraform
+  lifecycle {
+    ignore_changes = ["route"]
+  }
+
   tags {
-    Name = "${var.name}-RT"
+    Name              = "${var.name}-RT"
+    KubernetesCluster = "${var.kubernetes_cluster}"
   }
 }
 
@@ -13,7 +19,8 @@ resource "aws_subnet" "persistence" {
   count             = "${length(var.azs)}"
 
   tags {
-    Name = "${var.name}-${var.azs[count.index]}"
+    Name              = "${var.name}-${var.azs[count.index]}"
+    KubernetesCluster = "${var.kubernetes_cluster}"
   }
 }
 

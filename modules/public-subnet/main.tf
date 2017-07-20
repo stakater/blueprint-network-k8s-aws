@@ -2,7 +2,8 @@ resource "aws_internet_gateway" "public" {
   vpc_id = "${var.vpc_id}"
 
   tags {
-    Name = "${var.name}-IG"
+    Name              = "${var.name}-IG"
+    KubernetesCluster = "${var.kubernetes_cluster}"
   }
 }
 
@@ -14,8 +15,14 @@ resource "aws_route_table" "public" {
     gateway_id = "${aws_internet_gateway.public.id}"
   }
 
+  # Ignore routing table changes because we will add Kubernetes PodCIDR routing outside of Terraform
+  lifecycle {
+    ignore_changes = ["route"]
+  }
+
   tags {
-    Name = "${var.name}-rt"
+    Name              = "${var.name}-rt"
+    KubernetesCluster = "${var.kubernetes_cluster}"
   }
 }
 
@@ -26,7 +33,8 @@ resource "aws_subnet" "public" {
   count             = "${length(var.azs)}"
 
   tags {
-    Name = "${var.name}-${var.azs[count.index]}"
+    Name              = "${var.name}-${var.azs[count.index]}"
+    KubernetesCluster = "${var.kubernetes_cluster}"
   }
 
   lifecycle {

@@ -8,11 +8,14 @@ resource "aws_route_table" "private" {
   }
 
   tags {
-    Name = "${var.name}-${var.azs[count.index]}"
+    Name              = "${var.name}-${var.azs[count.index]}"
+    KubernetesCluster = "${var.kubernetes_cluster}"
   }
 
+  # Ignore routing table changes because we will add Kubernetes PodCIDR routing outside of Terraform
   lifecycle {
     create_before_destroy = true
+    ignore_changes        = ["route"]
   }
 }
 
@@ -23,7 +26,8 @@ resource "aws_subnet" "private" {
   count             = "${length(var.azs)}"
 
   tags {
-    Name = "${var.name}-${var.azs[count.index]}"
+    Name              = "${var.name}-${var.azs[count.index]}"
+    KubernetesCluster = "${var.kubernetes_cluster}"
   }
 
   lifecycle {
